@@ -1,65 +1,64 @@
 <?php
-
 namespace App\Http\Controllers;
 
-use App\Models\ReviewAlert;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\ReviewAlert;
 
 class ReviewAlertController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        return response()->json(ReviewAlert::all());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'reservation_id' => 'required|exists:reservations,id',
+            'event_type' => 'required|string',
+            'alert_date' => 'nullable|date',
+            'sent' => 'boolean',
+        ]);
+
+        $alert = ReviewAlert::create($request->all());
+
+        return response()->json($alert, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(ReviewAlert $reviewAlert)
+    public function show($id)
     {
-        //
+        $alert = ReviewAlert::find($id);
+        if (!$alert) return response()->json(['message' => 'Review Alert not found'], 404);
+        return response()->json($alert);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(ReviewAlert $reviewAlert)
+    public function update(Request $request, $id)
     {
-        //
+        $alert = ReviewAlert::find($id);
+        if (!$alert) return response()->json(['message' => 'Review Alert not found'], 404);
+
+        $request->validate([
+            'user_id' => 'sometimes|exists:users,id',
+            'reservation_id' => 'sometimes|exists:reservations,id',
+            'event_type' => 'sometimes|string',
+            'alert_date' => 'nullable|date',
+            'sent' => 'boolean',
+        ]);
+
+        $alert->update($request->all());
+
+        return response()->json($alert);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, ReviewAlert $reviewAlert)
+    public function destroy($id)
     {
-        //
-    }
+        $alert = ReviewAlert::find($id);
+        if (!$alert) return response()->json(['message' => 'Review Alert not found'], 404);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(ReviewAlert $reviewAlert)
-    {
-        //
+        $alert->delete();
+
+        return response()->json(['message' => 'Review Alert deleted']);
     }
 }

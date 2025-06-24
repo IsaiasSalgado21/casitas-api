@@ -1,65 +1,66 @@
 <?php
-
 namespace App\Http\Controllers;
 
-use App\Models\Review;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Review;
 
 class ReviewController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        return response()->json(Review::all());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'cabin_id' => 'required|exists:cabins,id',
+            'rating' => 'required|integer|min:1|max:5',
+            'comment' => 'nullable|string',
+            'review_date' => 'nullable|date',
+            'status' => 'required|string',
+        ]);
+
+        $review = Review::create($request->all());
+
+        return response()->json($review, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Review $review)
+    public function show($id)
     {
-        //
+        $review = Review::find($id);
+        if (!$review) return response()->json(['message' => 'Review not found'], 404);
+        return response()->json($review);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Review $review)
+    public function update(Request $request, $id)
     {
-        //
+        $review = Review::find($id);
+        if (!$review) return response()->json(['message' => 'Review not found'], 404);
+
+        $request->validate([
+            'user_id' => 'sometimes|exists:users,id',
+            'cabin_id' => 'sometimes|exists:cabins,id',
+            'rating' => 'sometimes|integer|min:1|max:5',
+            'comment' => 'nullable|string',
+            'review_date' => 'nullable|date',
+            'status' => 'sometimes|string',
+        ]);
+
+        $review->update($request->all());
+
+        return response()->json($review);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Review $review)
+    public function destroy($id)
     {
-        //
-    }
+        $review = Review::find($id);
+        if (!$review) return response()->json(['message' => 'Review not found'], 404);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Review $review)
-    {
-        //
+        $review->delete();
+
+        return response()->json(['message' => 'Review deleted']);
     }
 }

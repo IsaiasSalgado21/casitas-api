@@ -1,65 +1,72 @@
 <?php
-
 namespace App\Http\Controllers;
 
-use App\Models\Reservation;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Reservation;
 
 class ReservationController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        return response()->json(Reservation::all());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'verification_code' => 'required|string',
+            'user_id' => 'required|exists:users,id',
+            'cabin_id' => 'required|exists:cabins,id',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+            'status' => 'required|string',
+            'total' => 'required|numeric',
+            'notes' => 'nullable|string',
+            'reminder_sent' => 'boolean',
+        ]);
+
+        $reservation = Reservation::create($request->all());
+
+        return response()->json($reservation, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Reservation $reservation)
+    public function show($id)
     {
-        //
+        $reservation = Reservation::find($id);
+        if (!$reservation) return response()->json(['message' => 'Reservation not found'], 404);
+        return response()->json($reservation);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Reservation $reservation)
+    public function update(Request $request, $id)
     {
-        //
+        $reservation = Reservation::find($id);
+        if (!$reservation) return response()->json(['message' => 'Reservation not found'], 404);
+
+        $request->validate([
+            'verification_code' => 'sometimes|string',
+            'user_id' => 'sometimes|exists:users,id',
+            'cabin_id' => 'sometimes|exists:cabins,id',
+            'start_date' => 'sometimes|date',
+            'end_date' => 'sometimes|date|after_or_equal:start_date',
+            'status' => 'sometimes|string',
+            'total' => 'sometimes|numeric',
+            'notes' => 'nullable|string',
+            'reminder_sent' => 'boolean',
+        ]);
+
+        $reservation->update($request->all());
+
+        return response()->json($reservation);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Reservation $reservation)
+    public function destroy($id)
     {
-        //
-    }
+        $reservation = Reservation::find($id);
+        if (!$reservation) return response()->json(['message' => 'Reservation not found'], 404);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Reservation $reservation)
-    {
-        //
+        $reservation->delete();
+
+        return response()->json(['message' => 'Reservation deleted']);
     }
 }

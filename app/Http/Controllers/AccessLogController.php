@@ -1,65 +1,62 @@
 <?php
-
 namespace App\Http\Controllers;
 
-use App\Models\AccessLog;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\AccessLog;
 
 class AccessLogController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        return response()->json(AccessLog::all());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'ip_address' => 'required|string',
+            'browser' => 'required|string',
+            'login_at' => 'nullable|date',
+        ]);
+
+        $accessLog = AccessLog::create($request->all());
+
+        return response()->json($accessLog, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(AccessLog $accessLog)
+    public function show($id)
     {
-        //
+        $accessLog = AccessLog::find($id);
+        if (!$accessLog) return response()->json(['message' => 'Access Log not found'], 404);
+        return response()->json($accessLog);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(AccessLog $accessLog)
+    public function update(Request $request, $id)
     {
-        //
+        $accessLog = AccessLog::find($id);
+        if (!$accessLog) return response()->json(['message' => 'Access Log not found'], 404);
+
+        $request->validate([
+            'user_id' => 'sometimes|exists:users,id',
+            'ip_address' => 'sometimes|string',
+            'browser' => 'sometimes|string',
+            'login_at' => 'nullable|date',
+        ]);
+
+        $accessLog->update($request->all());
+
+        return response()->json($accessLog);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, AccessLog $accessLog)
+    public function destroy($id)
     {
-        //
-    }
+        $accessLog = AccessLog::find($id);
+        if (!$accessLog) return response()->json(['message' => 'Access Log not found'], 404);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(AccessLog $accessLog)
-    {
-        //
+        $accessLog->delete();
+
+        return response()->json(['message' => 'Access Log deleted']);
     }
 }

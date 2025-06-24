@@ -2,64 +2,69 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Availability;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Availability;
 
 class AvailabilityController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        return response()->json(Availability::all());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'cabin_id' => 'required|exists:cabins,id',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+            'status' => 'required|string',
+        ]);
+
+        $availability = Availability::create($request->all());
+
+        return response()->json($availability, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Availability $availability)
+    public function show($id)
     {
-        //
+        $availability = Availability::find($id);
+        if (!$availability) {
+            return response()->json(['message' => 'Availability not found'], 404);
+        }
+
+        return response()->json($availability);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Availability $availability)
+    public function update(Request $request, $id)
     {
-        //
+        $availability = Availability::find($id);
+        if (!$availability) {
+            return response()->json(['message' => 'Availability not found'], 404);
+        }
+
+        $request->validate([
+            'cabin_id' => 'sometimes|exists:cabins,id',
+            'start_date' => 'sometimes|date',
+            'end_date' => 'sometimes|date|after_or_equal:start_date',
+            'status' => 'sometimes|string',
+        ]);
+
+        $availability->update($request->all());
+
+        return response()->json($availability);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Availability $availability)
+    public function destroy($id)
     {
-        //
-    }
+        $availability = Availability::find($id);
+        if (!$availability) {
+            return response()->json(['message' => 'Availability not found'], 404);
+        }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Availability $availability)
-    {
-        //
+        $availability->delete();
+
+        return response()->json(['message' => 'Availability deleted']);
     }
 }

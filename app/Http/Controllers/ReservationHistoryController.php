@@ -1,65 +1,66 @@
 <?php
-
 namespace App\Http\Controllers;
 
-use App\Models\ReservationHistory;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\ReservationHistory;
 
 class ReservationHistoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        return response()->json(ReservationHistory::all());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'reservation_id' => 'required|exists:reservations,id',
+            'previous_status' => 'required|string',
+            'new_status' => 'required|string',
+            'event_date' => 'nullable|date',
+            'details' => 'nullable|string',
+        ]);
+
+        $history = ReservationHistory::create($request->all());
+
+        return response()->json($history, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(ReservationHistory $reservationHistory)
+    public function show($id)
     {
-        //
+        $history = ReservationHistory::find($id);
+        if (!$history) return response()->json(['message' => 'Reservation History not found'], 404);
+        return response()->json($history);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(ReservationHistory $reservationHistory)
+    public function update(Request $request, $id)
     {
-        //
+        $history = ReservationHistory::find($id);
+        if (!$history) return response()->json(['message' => 'Reservation History not found'], 404);
+
+        $request->validate([
+            'user_id' => 'sometimes|exists:users,id',
+            'reservation_id' => 'sometimes|exists:reservations,id',
+            'previous_status' => 'sometimes|string',
+            'new_status' => 'sometimes|string',
+            'event_date' => 'nullable|date',
+            'details' => 'nullable|string',
+        ]);
+
+        $history->update($request->all());
+
+        return response()->json($history);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, ReservationHistory $reservationHistory)
+    public function destroy($id)
     {
-        //
-    }
+        $history = ReservationHistory::find($id);
+        if (!$history) return response()->json(['message' => 'Reservation History not found'], 404);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(ReservationHistory $reservationHistory)
-    {
-        //
+        $history->delete();
+
+        return response()->json(['message' => 'Reservation History deleted']);
     }
 }

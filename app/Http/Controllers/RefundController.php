@@ -1,65 +1,63 @@
 <?php
-
 namespace App\Http\Controllers;
 
-use App\Models\Refund;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Refund;
 
 class RefundController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        return response()->json(Refund::all());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'payment_id' => 'required|exists:payments,id',
+            'refund_amount' => 'required|numeric',
+            'reason' => 'nullable|string',
+            'refund_date' => 'nullable|date',
+        ]);
+
+        $refund = Refund::create($request->all());
+
+        return response()->json($refund, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Refund $refund)
+    public function show($id)
     {
-        //
+        $refund = Refund::find($id);
+        if (!$refund) return response()->json(['message' => 'Refund not found'], 404);
+        return response()->json($refund);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Refund $refund)
+    public function update(Request $request, $id)
     {
-        //
+        $refund = Refund::find($id);
+        if (!$refund) return response()->json(['message' => 'Refund not found'], 404);
+
+        $request->validate([
+            'payment_id' => 'sometimes|exists:payments,id',
+            'refund_amount' => 'sometimes|numeric',
+            'reason' => 'nullable|string',
+            'refund_date' => 'nullable|date',
+        ]);
+
+        $refund->update($request->all());
+
+        return response()->json($refund);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Refund $refund)
+    public function destroy($id)
     {
-        //
-    }
+        $refund = Refund::find($id);
+        if (!$refund) return response()->json(['message' => 'Refund not found'], 404);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Refund $refund)
-    {
-        //
+        $refund->delete();
+
+        return response()->json(['message' => 'Refund deleted']);
     }
 }
+    

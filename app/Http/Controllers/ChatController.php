@@ -1,65 +1,58 @@
 <?php
-
 namespace App\Http\Controllers;
 
-use App\Models\Chat;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Chat;
 
 class ChatController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        return response()->json(Chat::all());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'reservation_id' => 'required|exists:reservations,id',
+        ]);
+
+        $chat = Chat::create($request->all());
+
+        return response()->json($chat, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Chat $chat)
+    public function show($id)
     {
-        //
+        $chat = Chat::find($id);
+        if (!$chat) return response()->json(['message' => 'Chat not found'], 404);
+        return response()->json($chat);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Chat $chat)
+    public function update(Request $request, $id)
     {
-        //
+        $chat = Chat::find($id);
+        if (!$chat) return response()->json(['message' => 'Chat not found'], 404);
+
+        $request->validate([
+            'user_id' => 'sometimes|exists:users,id',
+            'reservation_id' => 'sometimes|exists:reservations,id',
+        ]);
+
+        $chat->update($request->all());
+
+        return response()->json($chat);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Chat $chat)
+    public function destroy($id)
     {
-        //
-    }
+        $chat = Chat::find($id);
+        if (!$chat) return response()->json(['message' => 'Chat not found'], 404);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Chat $chat)
-    {
-        //
+        $chat->delete();
+
+        return response()->json(['message' => 'Chat deleted']);
     }
 }

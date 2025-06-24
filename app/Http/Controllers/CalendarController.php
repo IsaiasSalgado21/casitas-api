@@ -1,65 +1,60 @@
 <?php
-
 namespace App\Http\Controllers;
 
-use App\Models\Calendar;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Calendar;
 
 class CalendarController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        return response()->json(Calendar::all());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'cabin_id' => 'required|exists:cabins,id',
+            'date' => 'required|date',
+            'status' => 'required|string',
+        ]);
+
+        $calendar = Calendar::create($request->all());
+
+        return response()->json($calendar, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Calendar $calendar)
+    public function show($id)
     {
-        //
+        $calendar = Calendar::find($id);
+        if (!$calendar) return response()->json(['message' => 'Calendar not found'], 404);
+        return response()->json($calendar);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Calendar $calendar)
+    public function update(Request $request, $id)
     {
-        //
+        $calendar = Calendar::find($id);
+        if (!$calendar) return response()->json(['message' => 'Calendar not found'], 404);
+
+        $request->validate([
+            'cabin_id' => 'sometimes|exists:cabins,id',
+            'date' => 'sometimes|date',
+            'status' => 'sometimes|string',
+        ]);
+
+        $calendar->update($request->all());
+
+        return response()->json($calendar);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Calendar $calendar)
+    public function destroy($id)
     {
-        //
-    }
+        $calendar = Calendar::find($id);
+        if (!$calendar) return response()->json(['message' => 'Calendar not found'], 404);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Calendar $calendar)
-    {
-        //
+        $calendar->delete();
+
+        return response()->json(['message' => 'Calendar deleted']);
     }
 }

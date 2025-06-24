@@ -1,65 +1,70 @@
 <?php
-
 namespace App\Http\Controllers;
 
-use App\Models\Cabin;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Cabin;
 
 class CabinController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        return response()->json(Cabin::all());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
+            'capacity' => 'required|integer',
+            'size_m2' => 'required|integer',
+            'price_per_night' => 'required|numeric',
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
+            'active' => 'boolean',
+        ]);
+
+        $cabin = Cabin::create($request->all());
+
+        return response()->json($cabin, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Cabin $cabin)
+    public function show($id)
     {
-        //
+        $cabin = Cabin::find($id);
+        if (!$cabin) return response()->json(['message' => 'Cabin not found'], 404);
+        return response()->json($cabin);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Cabin $cabin)
+    public function update(Request $request, $id)
     {
-        //
+        $cabin = Cabin::find($id);
+        if (!$cabin) return response()->json(['message' => 'Cabin not found'], 404);
+
+        $request->validate([
+            'name' => 'sometimes|string|max:255',
+            'description' => 'sometimes|string',
+            'capacity' => 'sometimes|integer',
+            'size_m2' => 'sometimes|integer',
+            'price_per_night' => 'sometimes|numeric',
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
+            'active' => 'boolean',
+        ]);
+
+        $cabin->update($request->all());
+
+        return response()->json($cabin);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Cabin $cabin)
+    public function destroy($id)
     {
-        //
-    }
+        $cabin = Cabin::find($id);
+        if (!$cabin) return response()->json(['message' => 'Cabin not found'], 404);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Cabin $cabin)
-    {
-        //
+        $cabin->delete();
+
+        return response()->json(['message' => 'Cabin deleted']);
     }
 }

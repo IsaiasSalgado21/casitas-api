@@ -1,65 +1,60 @@
 <?php
-
 namespace App\Http\Controllers;
 
-use App\Models\CabinImage;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\CabinImage;
 
 class CabinImageController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        return response()->json(CabinImage::all());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'cabin_id' => 'required|exists:cabins,id',
+            'url' => 'required|string',
+            'description' => 'nullable|string',
+        ]);
+
+        $cabinImage = CabinImage::create($request->all());
+
+        return response()->json($cabinImage, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(CabinImage $cabinImage)
+    public function show($id)
     {
-        //
+        $cabinImage = CabinImage::find($id);
+        if (!$cabinImage) return response()->json(['message' => 'Cabin Image not found'], 404);
+        return response()->json($cabinImage);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(CabinImage $cabinImage)
+    public function update(Request $request, $id)
     {
-        //
+        $cabinImage = CabinImage::find($id);
+        if (!$cabinImage) return response()->json(['message' => 'Cabin Image not found'], 404);
+
+        $request->validate([
+            'cabin_id' => 'sometimes|exists:cabins,id',
+            'url' => 'sometimes|string',
+            'description' => 'nullable|string',
+        ]);
+
+        $cabinImage->update($request->all());
+
+        return response()->json($cabinImage);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, CabinImage $cabinImage)
+    public function destroy($id)
     {
-        //
-    }
+        $cabinImage = CabinImage::find($id);
+        if (!$cabinImage) return response()->json(['message' => 'Cabin Image not found'], 404);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(CabinImage $cabinImage)
-    {
-        //
+        $cabinImage->delete();
+
+        return response()->json(['message' => 'Cabin Image deleted']);
     }
 }

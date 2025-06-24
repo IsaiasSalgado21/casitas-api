@@ -1,65 +1,60 @@
 <?php
-
 namespace App\Http\Controllers;
 
-use App\Models\UserImage;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\UserImage;
 
 class UserImageController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        return response()->json(UserImage::all());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'url' => 'required|string',
+            'type' => 'nullable|string',
+        ]);
+
+        $userImage = UserImage::create($request->all());
+
+        return response()->json($userImage, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(UserImage $userImage)
+    public function show($id)
     {
-        //
+        $userImage = UserImage::find($id);
+        if (!$userImage) return response()->json(['message' => 'User Image not found'], 404);
+        return response()->json($userImage);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(UserImage $userImage)
+    public function update(Request $request, $id)
     {
-        //
+        $userImage = UserImage::find($id);
+        if (!$userImage) return response()->json(['message' => 'User Image not found'], 404);
+
+        $request->validate([
+            'user_id' => 'sometimes|exists:users,id',
+            'url' => 'sometimes|string',
+            'type' => 'nullable|string',
+        ]);
+
+        $userImage->update($request->all());
+
+        return response()->json($userImage);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, UserImage $userImage)
+    public function destroy($id)
     {
-        //
-    }
+        $userImage = UserImage::find($id);
+        if (!$userImage) return response()->json(['message' => 'User Image not found'], 404);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(UserImage $userImage)
-    {
-        //
+        $userImage->delete();
+
+        return response()->json(['message' => 'User Image deleted']);
     }
 }

@@ -1,65 +1,62 @@
 <?php
-
 namespace App\Http\Controllers;
 
-use App\Models\ChatMessage;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\ChatMessage;
 
 class ChatMessageController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        return response()->json(ChatMessage::all());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'chat_id' => 'required|exists:chats,id',
+            'sender' => 'required|string',
+            'message' => 'required|string',
+            'sent_at' => 'nullable|date',
+        ]);
+
+        $chatMessage = ChatMessage::create($request->all());
+
+        return response()->json($chatMessage, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(ChatMessage $chatMessage)
+    public function show($id)
     {
-        //
+        $chatMessage = ChatMessage::find($id);
+        if (!$chatMessage) return response()->json(['message' => 'Chat Message not found'], 404);
+        return response()->json($chatMessage);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(ChatMessage $chatMessage)
+    public function update(Request $request, $id)
     {
-        //
+        $chatMessage = ChatMessage::find($id);
+        if (!$chatMessage) return response()->json(['message' => 'Chat Message not found'], 404);
+
+        $request->validate([
+            'chat_id' => 'sometimes|exists:chats,id',
+            'sender' => 'sometimes|string',
+            'message' => 'sometimes|string',
+            'sent_at' => 'nullable|date',
+        ]);
+
+        $chatMessage->update($request->all());
+
+        return response()->json($chatMessage);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, ChatMessage $chatMessage)
+    public function destroy($id)
     {
-        //
-    }
+        $chatMessage = ChatMessage::find($id);
+        if (!$chatMessage) return response()->json(['message' => 'Chat Message not found'], 404);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(ChatMessage $chatMessage)
-    {
-        //
+        $chatMessage->delete();
+
+        return response()->json(['message' => 'Chat Message deleted']);
     }
 }
