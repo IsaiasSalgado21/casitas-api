@@ -38,7 +38,7 @@ class UserImageController extends Controller
         if (!$userImage) return response()->json(['message' => 'User Image not found'], 404);
 
         $request->validate([
-            'user_id' => 'sometimes|exists:users,id',
+            'user_id' => 'required|exists:users,id',
             'url' => 'sometimes|string',
             'type' => 'nullable|string',
         ]);

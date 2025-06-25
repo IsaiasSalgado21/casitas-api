@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('review_alerts', function (Blueprint $table) {
             $table->id('alert_id');
-            $table->foreignId('user_id')->constrained('users');
+            $table->uuid('user_id');
+            $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');
             $table->foreignId('reservation_id')->constrained('reservations');
             $table->enum('event_type', ['on_completion', 'post_use']);
             $table->timestamp('alert_date')->useCurrent();

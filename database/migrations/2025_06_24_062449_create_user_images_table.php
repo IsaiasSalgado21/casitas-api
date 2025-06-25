@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('user_images', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->uuid('user_id');
+            $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');
             $table->string('url');
             $table->enum('type', ['avatar', 'document']);
             $table->timestamp('uploaded_at')->useCurrent();

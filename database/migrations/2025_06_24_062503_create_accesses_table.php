@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('access_logs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users');
+            $table->uuid('user_id');
+            $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');
             $table->string('ip_address');
             $table->string('browser');
             $table->timestamp('login_at')->useCurrent();

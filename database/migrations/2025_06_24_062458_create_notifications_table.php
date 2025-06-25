@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('notifications', function (Blueprint $table) {
             $table->id('notification_id');
-            $table->foreignId('user_id')->constrained('users');
+            $table->uuid('user_id');
+            $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');
             $table->enum('type', ['reservation_confirmation', 'session_error', 'reminder', 'other']);
             $table->text('message');
             $table->boolean('read')->default(false);

@@ -13,17 +13,18 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'nullable|string|max:255',
             'email' => 'required|string|email|unique:users',
             'password' => 'required|string|min:6',
         ]);
 
         $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password), // Usa Hash::make
-        ]);
-
+        'first_name' => $request->name, // puedes partir name si lo deseas
+        'last_name' => '',
+        'email' => $request->email,
+        'password' => $request->password,
+    ]);
         return response()->json(['message' => 'Usuario registrado correctamente'], 201);
     }
 
@@ -38,8 +39,8 @@ class AuthController extends Controller
         $user = User::where('email', $request->email)->first();
 
         if (!$user || !Hash::check($request->password, $user->password)) {
-            return response()->json(['message' => 'Credenciales inválidas'], 401);
-        }
+        return response()->json(['message' => 'Credenciales inválidas'], 401);
+    }
 
         $token = $user->createToken('hotel_token')->plainTextToken;
 

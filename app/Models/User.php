@@ -4,24 +4,41 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasApiTokens;
+    use HasFactory, Notifiable, HasApiTokens, HasUuids;
 
     /**
      * The attributes that are mass assignable.
      *
      * @var list<string>
      */
+    protected $primaryKey = 'user_id';
+    public $incrementing = false;
+    protected $keyType = 'string';
+
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
         'email',
         'password',
+        'role',
+        'provider',
+        'phone',
+        'address',
+        'status',
+        'verified',
+        'recovery_token',
+        'recovery_exp',
+        'created_at',
+        'last_login_at',
     ];
 
     /**
@@ -31,9 +48,13 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
-        'remember_token',
+        'recovery_token',
+        'remember_token'
     ];
-
+     public function getAuthPassword()
+    {
+        return $this->password_hash;
+    }
     /**
      * Get the attributes that should be cast.
      *
@@ -45,5 +66,11 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+    protected static function booted()
+    {
+        static::creating(function ($user) {
+            $user->user_id = (string) Str::uuid();
+        });
     }
 }

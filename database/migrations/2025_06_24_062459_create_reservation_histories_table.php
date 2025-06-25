@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('reservation_history', function (Blueprint $table) {
             $table->id('history_id');
-            $table->foreignId('user_id')->constrained('users');
+            $table->uuid('user_id');
+            $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');
             $table->foreignId('reservation_id')->constrained('reservations');
             $table->string('previous_status');
             $table->string('new_status');
