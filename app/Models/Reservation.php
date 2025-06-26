@@ -21,7 +21,6 @@ class Reservation extends Model
 
     public function cabin() { return $this->belongsTo(Cabin::class); }
     public function payments() { return $this->hasMany(Payment::class); }
-    public function refunds() { return $this->hasMany(Refund::class); }
     public function chats() { return $this->hasMany(Chat::class); }
     public function histories() { return $this->hasMany(ReservationHistory::class); }
 }

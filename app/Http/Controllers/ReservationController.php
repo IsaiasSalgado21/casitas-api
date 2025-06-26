@@ -47,7 +47,7 @@ class ReservationController extends Controller
             'verification_code' => 'sometimes|string',
             'user_id' => 'sometimes|exists:users,user_id',
             'cabin_id' => 'sometimes|exists:cabins,id',
-            'start_date' => 'sometimes|date',
+            'start_date' => 'sometimes|d ate',
             'end_date' => 'sometimes|date|after_or_equal:start_date',
             'status' => 'sometimes|string',
             'total' => 'sometimes|numeric',

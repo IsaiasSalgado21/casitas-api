@@ -40,6 +40,10 @@ class DatabaseSeeder extends Seeder
             CabinSeeder::class,
             ReservationSeeder::class,
             PaymentSeeder::class,
+            ReviewSeeder::class,
+            AvailabilitySeeder::class,
+            CabinImageSeeder::class,
+            UserImageSeeder::class,
         ]);
     }
 }
