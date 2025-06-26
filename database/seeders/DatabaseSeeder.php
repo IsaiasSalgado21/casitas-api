@@ -33,5 +33,13 @@ class DatabaseSeeder extends Seeder
             'recovery_exp' => null,
             'last_login_at' => now(),
         ]);
+
+        User::factory(10)->create();
+
+        $this->call([
+            CabinSeeder::class,
+            ReservationSeeder::class,
+            PaymentSeeder::class,
+        ]);
     }
 }

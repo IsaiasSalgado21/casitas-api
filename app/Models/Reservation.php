@@ -14,7 +14,11 @@ class Reservation extends Model
     ];
     public $timestamps = false;
 
-    public function user() { return $this->belongsTo(User::class); }
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'user_id');
+    }
+
     public function cabin() { return $this->belongsTo(Cabin::class); }
     public function payments() { return $this->hasMany(Payment::class); }
     public function refunds() { return $this->hasMany(Refund::class); }

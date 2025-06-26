@@ -14,13 +14,15 @@ return new class extends Migration
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('reservation_id')->constrained('reservations');
-            $table->enum('payment_method', ['card', 'transfer', 'cash']);
+            $table->string('payment_method', 50);
             $table->decimal('amount', 10, 2);
             $table->string('currency', 3);
-            $table->enum('payment_type', ['deposit', 'final_payment']);
-            $table->enum('payment_status', ['pending', 'paid', 'failed']);
-            $table->json('transaction_details')->nullable();
+            $table->string('payment_type', 50);
+            $table->string('payment_status', 50);
+            $table->string('transaction_details')->nullable();
             $table->timestamp('payment_date')->nullable();
+
+            
         });
     }
 

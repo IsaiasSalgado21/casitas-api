@@ -16,7 +16,7 @@ class ReservationController extends Controller
     {
         $request->validate([
             'verification_code' => 'required|string',
-            'user_id' => 'required|exists:users,id',
+            'user_id' => 'required|exists:users,user_id',
             'cabin_id' => 'required|exists:cabins,id',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
@@ -45,7 +45,7 @@ class ReservationController extends Controller
 
         $request->validate([
             'verification_code' => 'sometimes|string',
-            'user_id' => 'sometimes|exists:users,id',
+            'user_id' => 'sometimes|exists:users,user_id',
             'cabin_id' => 'sometimes|exists:cabins,id',
             'start_date' => 'sometimes|date',
             'end_date' => 'sometimes|date|after_or_equal:start_date',
