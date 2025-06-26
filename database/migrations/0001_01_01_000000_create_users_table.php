@@ -25,7 +25,6 @@
                 $table->boolean('verified')->default(false);
                 $table->string('recovery_token')->nullable();
                 $table->timestamp('recovery_exp')->nullable();
-                $table->timestamp('created_at')->useCurrent();
                 $table->timestamp('last_login_at')->nullable();
             });
 

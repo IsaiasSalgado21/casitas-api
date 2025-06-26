@@ -31,7 +31,6 @@ class DatabaseSeeder extends Seeder
             'verified' => true,
             'recovery_token' => null,
             'recovery_exp' => null,
-            'created_at' => now(),
             'last_login_at' => now(),
         ]);
     }
