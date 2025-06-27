@@ -35,6 +35,7 @@ Route::get('/availabilities/{id}', [AvailabilityController::class, 'show']);
 
 Route::get('/reviews', [ReviewController::class, 'index']);
 Route::get('/reviews/{id}', [ReviewController::class, 'show']);
+Route::apiResource('reservations', ReservationController::class);
 
 /**
  * Rutas privadas (requieren autenticación)
@@ -57,7 +58,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('user-images', UserImageController::class)->except(['index', 'show']);
 
     Route::apiResource('calendars', CalendarController::class);
-    Route::apiResource('reservations', ReservationController::class);
+    
     Route::apiResource('payments', PaymentController::class);
     Route::apiResource('refunds', RefundController::class);
 
