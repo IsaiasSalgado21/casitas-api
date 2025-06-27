@@ -32,13 +32,14 @@ class CabinController extends Controller
 
     public function show($id)
     {
-          $cabin = Cabin::with(['reviews.user'])->findOrFail($id);
-
+        $cabin = Cabin::with(['reviews.user', 'images'])->findOrFail($id);
+        
         return response()->json([
             'id' => $cabin->id,
             'name' => $cabin->name,
             'pricePerNight' => $cabin->price_per_night,
             'capacity' => $cabin->capacity,
+            'images' => $cabin->images->pluck('url'),
             'reviwes' => $cabin->reviews->map(function ($review) {
                 return [
                     'fisrt_name' => $review->user->name ?? 'user',
