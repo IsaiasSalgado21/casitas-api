@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\api\AuthController;
+use App\Http\Controllers\UserController; 
 use App\Http\Controllers\CabinController;
 use App\Http\Controllers\CabinImageController;
 use App\Http\Controllers\UserImageController;
@@ -24,6 +25,8 @@ use App\Http\Controllers\AvailabilityController;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
+Route::apiResource('users', UserController::class);
+
 Route::get('/cabins', [CabinController::class, 'index']);
 Route::get('/cabins/{id}', [CabinController::class, 'show']);
 
@@ -41,7 +44,6 @@ Route::apiResource('reservations', ReservationController::class);
  * Rutas privadas (requieren autenticación)
  */
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/user', [AuthController::class, 'user']);
     Route::post('/logout', [AuthController::class, 'logout']);
 
     // Cabañas: solo editar, crear y eliminar requieren login
