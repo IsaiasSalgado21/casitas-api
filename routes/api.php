@@ -16,31 +16,63 @@ use App\Http\Controllers\ReservationHistoryController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ChatMessageController;
 use App\Http\Controllers\AccessLogController;
-use App\http\Controllers\AvailabilityController;
+use App\Http\Controllers\AvailabilityController;
 
-
-
+/**
+ * Rutas públicas
+ */
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
+Route::get('/cabins', [CabinController::class, 'index']);
+Route::get('/cabins/{id}', [CabinController::class, 'show']);
+
+Route::get('/cabin-images', [CabinImageController::class, 'index']);
+Route::get('/cabin-images/{id}', [CabinImageController::class, 'show']);
+
+Route::get('/availabilities', [AvailabilityController::class, 'index']);
+Route::get('/availabilities/{id}', [AvailabilityController::class, 'show']);
+
+Route::get('/reviews', [ReviewController::class, 'index']);
+Route::get('/reviews/{id}', [ReviewController::class, 'show']);
+
+/**
+ * Rutas privadas (requieren autenticación)
+ */
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [AuthController::class, 'user']);
     Route::post('/logout', [AuthController::class, 'logout']);
-    
-    Route::apiResource('cabins', CabinController::class);
-    Route::apiResource('cabin-images', CabinImageController::class);
-    Route::apiResource('user-images', UserImageController::class);
+
+    // Cabañas: solo editar, crear y eliminar requieren login
+    Route::post('/cabins', [CabinController::class, 'store']);
+    Route::put('/cabins/{id}', [CabinController::class, 'update']);
+    Route::delete('/cabins/{id}', [CabinController::class, 'destroy']);
+
+    // Imágenes de cabaña: crear, actualizar, eliminar
+    Route::post('/cabin-images', [CabinImageController::class, 'store']);
+    Route::put('/cabin-images/{id}', [CabinImageController::class, 'update']);
+    Route::delete('/cabin-images/{id}', [CabinImageController::class, 'destroy']);
+
+    // Imágenes de usuario (público o privado, según tu caso)
+    Route::apiResource('user-images', UserImageController::class)->except(['index', 'show']);
+
     Route::apiResource('calendars', CalendarController::class);
     Route::apiResource('reservations', ReservationController::class);
     Route::apiResource('payments', PaymentController::class);
     Route::apiResource('refunds', RefundController::class);
-    Route::apiResource('reviews', ReviewController::class);
+
+    // Crear comentario requiere estar logueado
+    Route::post('/reviews', [ReviewController::class, 'store']);
+    Route::put('/reviews/{id}', [ReviewController::class, 'update']);
+    Route::delete('/reviews/{id}', [ReviewController::class, 'destroy']);
+
     Route::apiResource('review-alerts', ReviewAlertController::class);
     Route::apiResource('notifications', NotificationController::class);
     Route::apiResource('reservation-histories', ReservationHistoryController::class);
     Route::apiResource('chats', ChatController::class);
     Route::apiResource('chat-messages', ChatMessageController::class);
     Route::apiResource('access-logs', AccessLogController::class);
-    Route::apiResource('availabilities', AvailabilityController::class);
-
+    Route::post('/availabilities', [AvailabilityController::class, 'store']);
+    Route::put('/availabilities/{id}', [AvailabilityController::class, 'update']);
+    Route::delete('/availabilities/{id}', [AvailabilityController::class, 'destroy']);
 });

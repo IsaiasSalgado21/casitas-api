@@ -38,11 +38,11 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             CabinSeeder::class,
+            CabinImageSeeder::class,
+            AvailabilitySeeder::class,
             ReservationSeeder::class,
             PaymentSeeder::class,
             ReviewSeeder::class,
-            AvailabilitySeeder::class,
-            CabinImageSeeder::class,
             UserImageSeeder::class,
         ]);
     }

@@ -9,7 +9,7 @@ class CabinController extends Controller
 {
     public function index()
     {
-        return response()->json(Cabin::all());
+        return response()->json(\App\Models\Cabin::where('active', true)->get());
     }
 
     public function store(Request $request)
@@ -32,9 +32,22 @@ class CabinController extends Controller
 
     public function show($id)
     {
-        $cabin = Cabin::find($id);
-        if (!$cabin) return response()->json(['message' => 'Cabin not found'], 404);
-        return response()->json($cabin);
+          $cabin = Cabin::with(['reviews.user'])->findOrFail($id);
+
+        return response()->json([
+            'id' => $cabin->id,
+            'name' => $cabin->name,
+            'pricePerNight' => $cabin->price_per_night,
+            'capacity' => $cabin->capacity,
+            'reviwes' => $cabin->reviews->map(function ($review) {
+                return [
+                    'fisrt_name' => $review->user->name ?? 'user',
+                    'rating' => $review->rating,
+                    'comment' => $review->comment,
+                    'date' => \Carbon\Carbon::parse($review->review_date)->toDateString(),
+                ];
+            }),
+        ]);
     }
 
     public function update(Request $request, $id)
@@ -68,3 +81,4 @@ class CabinController extends Controller
         return response()->json(['message' => 'Cabin deleted']);
     }
 }
+

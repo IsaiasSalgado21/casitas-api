@@ -16,7 +16,7 @@ class CabinImageSeeder extends Seeder
             for ($i = 0; $i < 3; $i++) {
                 CabinImage::create([
                     'cabin_id' => $cabin->id,
-                    'url' => 'https://picsum.photos/seed/' . rand(100, 999) . '/600/400',
+                    'url' => 'https://picsum.photos/seed/',
                     'description' => fake()->sentence(5),
                 ]);
             }

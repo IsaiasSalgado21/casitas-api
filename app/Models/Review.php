@@ -12,6 +12,6 @@ class Review extends Model
     protected $fillable = ['user_id', 'cabin_id', 'rating', 'comment', 'review_date', 'status'];
     public $timestamps = false;
 
-    public function user() { return $this->belongsTo(User::class); }
+    public function user() { return $this->belongsTo(User::class, 'user_id', 'user_id'); }
     public function cabin() { return $this->belongsTo(Cabin::class); }
 }
