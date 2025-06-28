@@ -37,7 +37,7 @@ Route::get('/availabilities', [AvailabilityController::class, 'index']);
 Route::get('/availabilities/{id}', [AvailabilityController::class, 'show']);
 
 Route::get('/reviews', [ReviewController::class, 'index']);
-Route::get('/reviews/{id}', [ReviewController::class, 'show']);
+Route::get('/reviews/{review_id}', [ReviewController::class, 'show']);
 Route::apiResource('reservations', ReservationController::class);
 
 /**
