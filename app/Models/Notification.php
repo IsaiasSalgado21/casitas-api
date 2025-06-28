@@ -9,6 +9,7 @@ class Notification extends Model
 {
     use HasFactory;
 
+    protected $primaryKey = 'notification_id'; 
     protected $fillable = ['user_id', 'type', 'message', 'read', 'sent_at'];
     public $timestamps = false;
 
