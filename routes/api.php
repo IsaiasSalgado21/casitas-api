@@ -39,6 +39,10 @@ Route::get('/availabilities/{id}', [AvailabilityController::class, 'show']);
 Route::get('/reviews', [ReviewController::class, 'index']);
 Route::get('/reviews/{review_id}', [ReviewController::class, 'show']);
 Route::apiResource('reservations', ReservationController::class);
+Route::apiResource('notifications', NotificationController::class)->parameters([
+    'notifications' => 'notification_id'
+]);
+
 
 /**
  * Rutas privadas (requieren autenticación)
@@ -70,7 +74,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/reviews/{id}', [ReviewController::class, 'destroy']);
 
     Route::apiResource('review-alerts', ReviewAlertController::class);
-    Route::apiResource('notifications', NotificationController::class);
     Route::apiResource('reservation-histories', ReservationHistoryController::class);
     Route::apiResource('chats', ChatController::class);
     Route::apiResource('chat-messages', ChatMessageController::class);
