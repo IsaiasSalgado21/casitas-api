@@ -15,7 +15,7 @@ class ReviewController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'user_id' => 'required|exists:users,id',
+            'user_id' => 'required|exists:users,user_id',
             'cabin_id' => 'required|exists:cabins,id',
             'rating' => 'required|integer|min:1|max:5',
             'comment' => 'nullable|string',

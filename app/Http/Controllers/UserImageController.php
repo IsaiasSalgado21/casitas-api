@@ -15,7 +15,7 @@ class UserImageController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'user_id' => 'required|exists:users,id',
+            'user_id' => 'required|exists:users,user_id',
             'url' => 'required|string',
             'type' => 'nullable|string',
         ]);

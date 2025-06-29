@@ -42,6 +42,7 @@ class DatabaseSeeder extends Seeder
             AvailabilitySeeder::class,
             CalendarSeeder::class,
             ReservationSeeder::class,
+            ReviewAlertSeeder::class,
             PaymentSeeder::class,
             ReviewSeeder::class,
             UserImageSeeder::class,

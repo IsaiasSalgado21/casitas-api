@@ -15,7 +15,7 @@ class ReservationHistoryController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'user_id' => 'required|exists:users,id',
+            'user_id' => 'required|exists:users,user_id',
             'reservation_id' => 'required|exists:reservations,id',
             'previous_status' => 'required|string',
             'new_status' => 'required|string',
