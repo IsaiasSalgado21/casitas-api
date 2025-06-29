@@ -40,6 +40,7 @@ class DatabaseSeeder extends Seeder
             CabinSeeder::class,
             CabinImageSeeder::class,
             AvailabilitySeeder::class,
+            CalendarSeeder::class,
             ReservationSeeder::class,
             PaymentSeeder::class,
             ReviewSeeder::class,

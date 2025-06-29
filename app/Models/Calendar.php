@@ -8,6 +8,7 @@ class Calendar extends Model
 {
     use HasFactory;
 
+    protected $primaryKey = 'calendar_id'; 
     protected $fillable = ['cabin_id', 'date', 'status'];
     public $timestamps = false;
 

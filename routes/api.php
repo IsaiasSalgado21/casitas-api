@@ -36,6 +36,10 @@ Route::get('/cabin-images/{id}', [CabinImageController::class, 'show']);
 Route::get('/availabilities', [AvailabilityController::class, 'index']);
 Route::get('/availabilities/{id}', [AvailabilityController::class, 'show']);
 
+Route::apiResource('calendars', CalendarController::class)->parameters([
+    'calendars' => 'calendar_id'
+]);
+
 Route::get('/reviews', [ReviewController::class, 'index']);
 Route::get('/reviews/{review_id}', [ReviewController::class, 'show']);
 Route::apiResource('reservations', ReservationController::class);
@@ -63,7 +67,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Imágenes de usuario (público o privado, según tu caso)
     Route::apiResource('user-images', UserImageController::class)->except(['index', 'show']);
 
-    Route::apiResource('calendars', CalendarController::class);
+    
     
     Route::apiResource('payments', PaymentController::class);
     Route::apiResource('refunds', RefundController::class);
