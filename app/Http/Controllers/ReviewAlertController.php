@@ -15,7 +15,7 @@ class ReviewAlertController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'user_id' => 'required|exists:users,id',
+            'user_id' => 'required|exists:users,user_id',
             'reservation_id' => 'required|exists:reservations,id',
             'event_type' => 'required|string',
             'alert_date' => 'nullable|date',

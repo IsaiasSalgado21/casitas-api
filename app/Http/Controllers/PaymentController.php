@@ -21,7 +21,7 @@ class PaymentController extends Controller
             'currency' => 'required|string|size:3',
             'payment_type' => 'required|in:deposit,final_payment',
             'payment_status' => 'required|in:pending,paid,failed',
-            'transaction_details' => 'nullable|json',
+            'transaction_details' => 'nullable|string',
             'payment_date' => 'nullable|date',
         ]);
 
@@ -49,7 +49,7 @@ class PaymentController extends Controller
             'currency' => 'sometimes|string|size:3',
             'payment_type' => 'sometimes|in:deposit,final_payment',
             'payment_status' => 'sometimes|in:pending,paid,failed',
-            'transaction_details' => 'nullable|json',
+            'transaction_details' => 'nullable|string',
             'payment_date' => 'nullable|date',
         ]);
 
