@@ -18,6 +18,7 @@ use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ChatMessageController;
 use App\Http\Controllers\AccessLogController;
 use App\Http\Controllers\AvailabilityController;
+use Illuminate\Http\Request;
 
 /**
  * Rutas públicas
@@ -26,6 +27,7 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::apiResource('users', UserController::class);
+
 
 Route::get('/cabins', [CabinController::class, 'index']);
 Route::get('/cabins/{id}', [CabinController::class, 'show']);
@@ -87,3 +89,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/availabilities/{id}', [AvailabilityController::class, 'update']);
     Route::delete('/availabilities/{id}', [AvailabilityController::class, 'destroy']);
 });
+
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return $request->user();
+});
+
