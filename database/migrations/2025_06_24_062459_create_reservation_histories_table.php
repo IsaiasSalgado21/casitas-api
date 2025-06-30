@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('reservation_history', function (Blueprint $table) {
+        Schema::create('reservation_histories', function (Blueprint $table) {
             $table->id('history_id');
             $table->uuid('user_id');
             $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');

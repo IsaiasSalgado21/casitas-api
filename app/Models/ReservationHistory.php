@@ -9,6 +9,7 @@ class ReservationHistory extends Model
 {
     use HasFactory;
 
+    protected $primaryKey= 'history_id';
     protected $fillable = ['user_id', 'reservation_id', 'previous_status', 'new_status', 'event_date', 'details'];
     public $timestamps = false;
 

@@ -44,6 +44,7 @@ class DatabaseSeeder extends Seeder
             ReservationSeeder::class,
             ReviewAlertSeeder::class,
             PaymentSeeder::class,
+            ReservationHistorySeeder::class,
             ReviewSeeder::class,
             UserImageSeeder::class,
             NotificationSeeder::class,

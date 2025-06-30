@@ -47,6 +47,7 @@ Route::apiResource('notifications', NotificationController::class)->parameters([
     'notifications' => 'notification_id'
 ]);
 
+Route::apiResource('reservation-histories', ReservationHistoryController::class);
 
 /**
  * Rutas privadas (requieren autenticación)
@@ -78,7 +79,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/reviews/{id}', [ReviewController::class, 'destroy']);
 
     Route::apiResource('review-alerts', ReviewAlertController::class);
-    Route::apiResource('reservation-histories', ReservationHistoryController::class);
+    
     Route::apiResource('chats', ChatController::class);
     Route::apiResource('chat-messages', ChatMessageController::class);
     Route::apiResource('access-logs', AccessLogController::class);

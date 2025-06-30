@@ -42,7 +42,7 @@ class ReservationHistoryController extends Controller
 
         $request->validate([
             'user_id' => 'sometimes|exists:users,id',
-            'reservation_id' => 'sometimes|exists:reservations,id',
+            'reservation_id' => 'sometimes|exists:reservations,user_id',
             'previous_status' => 'sometimes|string',
             'new_status' => 'sometimes|string',
             'event_date' => 'nullable|date',
